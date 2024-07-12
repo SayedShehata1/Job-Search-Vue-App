@@ -12,7 +12,7 @@
         </nav>
         <div class="flex items-center h-full ml-auto">
           <profile-image v-if="isLoggedIn" />
-          <action-button @click="loginUser" v-else />
+          <action-button @click="loginUser" v-else text="Sign in" type="primary" />
         </div>
       </div>
     </div>
