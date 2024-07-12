@@ -1,5 +1,6 @@
 import { expect, it, describe } from 'vitest'
 import { render, screen } from '@testing-library/vue'
+import userEvent from '@testing-library/user-event'
 import MainNav from '@/components/MainNav.vue'
 
 describe('MainNav', () => {
@@ -29,5 +30,36 @@ describe('MainNav', () => {
       'Students',
       'Jobs'
     ])
+  })
+
+  describe('when the user logged in', () => {
+    it('display user profile picture', async () => {
+      render(MainNav)
+
+      // if not exist will through an error
+      // .screen.getAllByRole("img")
+
+      // to get an element and if not exist move to the second check (not through an error)
+      let profileImage = screen.queryByRole('img', {
+        //  name is the img alt   - regular expression / /i for case sensitive
+        name: /user profile image/i
+      })
+      expect(profileImage).not.toBeInTheDocument()
+
+      // check the login click button
+      const loginButton = screen.getByRole('button', {
+        // name is the button text
+        name: /sign in/i
+      })
+
+      // click the login button using userEvent methods (return a promise for that we used async/await)
+      await userEvent.click(loginButton)
+      // after click the button the image will exist (so we use queryByRole not getByRole)
+      profileImage = screen.getByRole('img', {
+        name: /user profile image/i
+      })
+      // expect the profileImage to be in the document
+      expect(profileImage).toBeInTheDocument()
+    })
   })
 })
