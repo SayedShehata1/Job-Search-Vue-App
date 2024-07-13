@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="mb-16">
     <h1 class="font-bold tracking-tighter mb-14 text-8xl">
       <span :class="actionClass">
         {{ action }}
@@ -15,6 +15,7 @@ import nextElementInList from '@/utils/nextElementInList'
 
 export default {
   name: 'TheHeadline',
+
   data() {
     return {
       action: 'Build',
