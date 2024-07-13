@@ -1,5 +1,5 @@
 <template>
-  <header class="w-full text-sm">
+  <header :class="['w-full , text-sm', headerHightClass]">
     <div class="fixed top-0 left-0 w-full h-16 bg-white">
       <div class="flex h-full px-8 mx-auto border-b border-solid flex-nowrap border-brand-gray-1">
         <a :href="url" class="flex items-center h-full text-xl">{{ company }}</a>
@@ -12,7 +12,7 @@
         </nav>
         <div class="flex items-center h-full ml-auto">
           <profile-image v-if="isLoggedIn" />
-          <action-button @click="loginUser" v-else text="Sign in" type="primary" />
+          <action-button v-else text="Sign in" type="primary" @click="loginUser" />
         </div>
       </div>
       <the-subnav v-if="isLoggedIn" />
@@ -24,6 +24,7 @@
 import ActionButton from '@/components/ActionButton.vue'
 import ProfileImage from '@/components/ProfileImage.vue'
 import TheSubnav from '@/components/TheSubnav.vue'
+
 export default {
   name: 'MainNav',
   components: {
@@ -37,6 +38,14 @@ export default {
       url: 'https://careers.google.com',
       menuItems: ['Teams', 'Location', 'Life at Google', 'How we hire', 'Students', 'Jobs'],
       isLoggedIn: false
+    }
+  },
+  computed: {
+    headerHightClass() {
+      return {
+        'h-16': !this.isLoggedIn,
+        'h-32': this.isLoggedIn
+      }
     }
   },
   methods: {
