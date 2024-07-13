@@ -4,16 +4,27 @@ import userEvent from '@testing-library/user-event'
 import MainNav from '@/components/MainNav.vue'
 
 describe('MainNav', () => {
+  // render the MainNav component to make the code DRY
+  const renderMainNav = () => {
+    render(MainNav, {
+      global: {
+        stubs: {
+          //  stop the FontAwesomeIcon component from rendering
+          FontAwesomeIcon: true
+        }
+      }
+    })
+  }
+
   it('displays company name', () => {
-    // render the component (render can take another argument for options:data for example, but we don't need it here)
-    render(MainNav)
+    renderMainNav()
 
     // screen.getByText: find the element with the text 'Sayed Careers'
     const companyName = screen.getByText('Google Careers')
     expect(companyName).toBeInTheDocument()
   })
   it('displays menu items for navigation', () => {
-    render(MainNav)
+    renderMainNav()
 
     // screen.getAllByRole: find all elements with the role:key 'listitem'
     const navigationMenuItems = screen.getAllByRole('listitem')
@@ -34,7 +45,7 @@ describe('MainNav', () => {
 
   describe('when the user logged in', () => {
     it('display user profile picture', async () => {
-      render(MainNav)
+      renderMainNav()
 
       // if not exist will through an error
       // .screen.getAllByRole("img")
