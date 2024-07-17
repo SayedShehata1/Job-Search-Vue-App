@@ -2,6 +2,7 @@ import { expect, it, describe } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import MainNav from '@/components/Navigation/MainNav.vue'
+import { RouterLinkStub } from '@vue/test-utils'
 
 describe('MainNav', () => {
   // render the MainNav component to make the code DRY
@@ -10,7 +11,8 @@ describe('MainNav', () => {
       global: {
         stubs: {
           //  stop the FontAwesomeIcon component from rendering
-          FontAwesomeIcon: true
+          FontAwesomeIcon: true,
+          RouterLink: RouterLinkStub
         }
       }
     })
