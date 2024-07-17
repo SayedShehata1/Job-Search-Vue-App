@@ -1,20 +1,23 @@
 <template>
-  <form class="flex items-center w-full h-12 border border-solid rounded-3xl border-brand-gray-3">
+  <form
+    class="flex items-center w-full h-12 border border-solid rounded-3xl border-brand-gray-3"
+    @submit.prevent="searchForJobs"
+  >
     <font-awesome-icon :icon="['fas', 'search']" class="ml-4 mr-3" />
     <div class="flex flex-1 h-full text-base font-light flex-nowrap">
       <div class="relative flex items-center flex-1 h-full pr-3">
-        <label class="absolute left-0 -top-10">Role</label>
+        <label for="role" class="absolute left-0 -top-10">Role</label>
 
-        <text-input v-model="role" placeholder="Search for jobs" />
+        <text-input id="role" v-model="role" placeholder="Search for jobs" />
       </div>
       <span
         class="flex items-center h-full px-3 border-l border-r border-brand-gray-3 bg-brand-gray-2"
         >in</span
       >
       <div class="relative flex items-center flex-1 h-full pl-3">
-        <label class="absolute left-0 -top-10">Where?</label>
+        <label for="location" class="absolute left-0 -top-10">Where?</label>
 
-        <text-input v-model="location" placeholder="Cairo, Egypt" />
+        <text-input id="location" v-model="location" placeholder="Cairo, Egypt" />
       </div>
     </div>
     <action-button text="Search" type="secondary" class="rounded-r-3xl" />
@@ -35,6 +38,17 @@ export default {
     return {
       role: '',
       location: ''
+    }
+  },
+  methods: {
+    searchForJobs() {
+      this.$router.push({
+        name: 'JobResults',
+        query: {
+          role: this.role,
+          location: this.location
+        }
+      })
     }
   }
 }
