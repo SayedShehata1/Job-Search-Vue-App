@@ -13,16 +13,19 @@
           </ul>
         </nav>
         <div class="flex items-center h-full ml-auto">
-          <profile-image v-if="isLoggedIn" />
-          <action-button v-else text="Sign in" type="primary" @click="loginUser" />
+          <profile-image v-if="userStore.isLoggedIn" />
+          <action-button v-else text="Sign in" type="primary" @click="userStore.loginUser" />
         </div>
       </div>
-      <the-subnav v-if="isLoggedIn" />
+      <the-subnav v-if="userStore.isLoggedIn" />
     </div>
   </header>
 </template>
 
 <script>
+import { mapStores } from 'pinia'
+import { useUserStore } from '@/stores/user'
+
 import ActionButton from '@/components/Shared/ActionButton.vue'
 import ProfileImage from '@/components/Navigation/ProfileImage.vue'
 import TheSubnav from '@/components/Navigation/TheSubnav.vue'
@@ -43,21 +46,18 @@ export default {
         { text: 'How we hire', url: '/' },
         { text: 'Students', url: '/' },
         { text: 'Jobs', url: '/jobs/results' }
-      ],
-      isLoggedIn: false
+      ]
     }
   },
   computed: {
+    // mapStores is a helper function that takes a store and returns an object that can be used to map the store to the component instance
+    ...mapStores(useUserStore),
+
     headerHightClass() {
       return {
         'h-16': !this.isLoggedIn,
         'h-32': this.isLoggedIn
       }
-    }
-  },
-  methods: {
-    loginUser() {
-      this.isLoggedIn = true
     }
   }
 }
