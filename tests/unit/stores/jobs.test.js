@@ -24,4 +24,25 @@ describe('state', () => {
       expect(store.jobs).toEqual(['job 1', 'job 2'])
     })
   })
+  //  test the UNIQUE_ORGANIZATIONS getter
+  describe('UNIQUE_ORGANIZATIONS', () => {
+    it('finds unique organizations from list of jobs', () => {
+      const store = useJobsStore()
+      //  set the jobs state to a list of jobs with duplicate organizations
+      store.jobs = [
+        {
+          organization: 'Google'
+        },
+        {
+          organization: 'Amazon'
+        },
+        {
+          organization: 'Google'
+        }
+      ]
+      //  use the store to get the UNIQUE_ORGANIZATIONS getter and check that it returns a set of unique organizations
+      const result = store.UNIQUE_ORGANIZATIONS
+      expect(result).toEqual(new Set(['Google', 'Amazon']))
+    })
+  })
 })
