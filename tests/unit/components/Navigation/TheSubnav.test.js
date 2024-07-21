@@ -35,7 +35,7 @@ describe('TheSubnav', () => {
       // get the jobs store from the renderTheSubnav function
       const { jobsStore } = renderTheSubnav(routeName)
       const numberOfJobs = 16
-      jobsStore.FILTERED_JOBS_ORGANIZATIONS = Array(numberOfJobs).fill({})
+      jobsStore.FILTERED_JOBS = Array(numberOfJobs).fill({})
 
       //   get the job count element and check if it is in the document
       const jobCount = await screen.findByText(numberOfJobs)
@@ -47,8 +47,8 @@ describe('TheSubnav', () => {
       const routeName = 'Home'
       const { jobsStore } = renderTheSubnav(routeName)
       const numberOfJobs = 16
-      // set the FILTERED_JOBS_ORGANIZATIONS to an array of objects with the length of the number of jobs
-      jobsStore.FILTERED_JOBS_ORGANIZATIONS = Array(numberOfJobs).fill({})
+      // set the FILTERED_JOBS to an array of objects with the length of the number of jobs
+      jobsStore.FILTERED_JOBS = Array(numberOfJobs).fill({})
 
       //   get the job count element and check if it is not in the document
       const jobCount = screen.queryByText(numberOfJobs)
