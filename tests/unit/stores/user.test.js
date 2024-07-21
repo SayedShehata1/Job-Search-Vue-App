@@ -20,6 +20,10 @@ describe('state', () => {
     // Check that the selectedOrganizations array is empty by default
     expect(store.selectedOrganizations).toEqual([])
   })
+  it('store job types that the user would like to filter jobs by', () => {
+    const store = useUserStore()
+    expect(store.selectedJobTypes).toEqual([])
+  })
 })
 
 describe('actions', () => {
@@ -38,6 +42,14 @@ describe('actions', () => {
       store.ADD_SELECTED_ORGANIZATIONS(['Org1', 'Org2'])
       // Check that the selectedOrganizations array now contains the two organizations
       expect(store.selectedOrganizations).toEqual(['Org1', 'Org2'])
+    })
+  })
+
+  describe('ADD_SELECTED_JOB_TYPES', () => {
+    it('updates job types that user has chosen to filter jobs by', () => {
+      const store = useUserStore()
+      store.ADD_SELECTED_JOB_TYPES(['Full Time', 'Part Time'])
+      expect(store.selectedJobTypes).toEqual(['Full Time', 'Part Time'])
     })
   })
 })
