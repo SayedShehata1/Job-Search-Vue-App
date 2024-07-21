@@ -48,6 +48,8 @@ export default {
     // this method is called when the user selects an organization to filter by and it adds the selected organization to the user store
     selectJobType() {
       this.ADD_SELECTED_JOB_TYPES(this.selectedJobTypes)
+      // this will update the URL query params with the selected job types
+      this.$router.push({ name: 'JobResults' })
     }
   }
 }

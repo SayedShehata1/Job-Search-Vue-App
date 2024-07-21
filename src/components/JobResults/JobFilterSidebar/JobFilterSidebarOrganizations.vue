@@ -48,6 +48,7 @@ export default {
     // this method is called when the user selects an organization to filter by and it adds the selected organization to the user store
     selectOrganization() {
       this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations)
+      this.$router.push({ name: 'JobResults' })
     }
   }
 }

@@ -1,4 +1,4 @@
-import { expect, it, describe } from 'vitest'
+import { expect, it, describe, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
@@ -14,16 +14,19 @@ describe('JobFilterSidebarJobTypes', () => {
     const pinia = createTestingPinia()
     const jobsStore = useJobsStore()
     const userStore = useUserStore()
-
+    const $router = { push: vi.fn() }
     render(JobFilterSidebarJobTypes, {
       global: {
+        mocks: {
+          $router
+        },
         plugins: [pinia],
         stubs: {
           FontAwesomeIcon: true
         }
       }
     })
-    return { jobsStore, userStore }
+    return { jobsStore, userStore, $router }
   }
 
   it('render unique job types from jobs', async () => {
@@ -42,22 +45,42 @@ describe('JobFilterSidebarJobTypes', () => {
 
     expect(jobTypes).toEqual(['full time', 'part time'])
   })
-  it('communicate that user has a selected checkbox for an jobTypes', async () => {
-    const { userStore, jobsStore } = renderJobFilterSidebarJobTypes()
-    // set the UNIQUE_JOB_TYPES getter to return a set of unique jobtypess
-    jobsStore.UNIQUE_JOB_TYPES = new Set(['full time', 'part time'])
 
-    // first click the jobtypes button
-    const button = screen.getByRole('button', {
-      name: /job types/i
+  describe('when user selects a jobtypes', () => {
+    it('communicate that user has a selected checkbox for an jobTypes', async () => {
+      const { userStore, jobsStore } = renderJobFilterSidebarJobTypes()
+      // set the UNIQUE_JOB_TYPES getter to return a set of unique jobtypess
+      jobsStore.UNIQUE_JOB_TYPES = new Set(['full time', 'part time'])
+
+      // first click the jobtypes button
+      const button = screen.getByRole('button', {
+        name: /job types/i
+      })
+      await userEvent.click(button)
+      // second click the google checkbox
+      const fullTimeCheckbox = screen.getByRole('checkbox', {
+        name: /full time/i
+      })
+      await userEvent.click(fullTimeCheckbox)
+      // check that the user store has the selected jobtypes google
+      expect(userStore.ADD_SELECTED_JOB_TYPES).toHaveBeenCalledWith(['full time'])
     })
-    await userEvent.click(button)
-    // second click the google checkbox
-    const fullTimeCheckbox = screen.getByRole('checkbox', {
-      name: /full time/i
+    it('navigates user to job results page tp see fresh batch fo filtered jobs', async () => {
+      const { jobsStore, $router } = renderJobFilterSidebarJobTypes()
+      // set the UNIQUE_JOB_TYPES getter to return a set of unique jobtypess
+      jobsStore.UNIQUE_JOB_TYPES = new Set(['full time'])
+
+      // first click the jobtypes button
+      const button = screen.getByRole('button', {
+        name: /job types/i
+      })
+      await userEvent.click(button)
+
+      const fullTimeCheckbox = screen.getByRole('checkbox', {
+        name: /full time/i
+      })
+      await userEvent.click(fullTimeCheckbox)
+      expect($router.push).toHaveBeenCalledWith({ name: 'JobResults' })
     })
-    await userEvent.click(fullTimeCheckbox)
-    // check that the user store has the selected jobtypes google
-    expect(userStore.ADD_SELECTED_JOB_TYPES).toHaveBeenCalledWith(['full time'])
   })
 })
