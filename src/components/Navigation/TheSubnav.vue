@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useJobsStore } from '@/stores/jobs'
 // composition API functions
 import { computed } from 'vue'

@@ -1,15 +1,17 @@
-import { expect, it, describe, vi } from 'vitest'
+import { type Mock, expect, it, describe, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import axios from 'axios'
 
 import SpotLight from '@/components/JobSearch/SpotLight.vue'
 
 vi.mock('axios')
+// to make it work with TS we need to cast axios.get as Mock
+const axiosGetMock = axios.get as Mock
 
 describe('SpotLight', () => {
   // The mockSpotlightsResponse function is used to mock the response from the axios.get method
   const mockSpotlightsResponse = (spotlight = {}) => {
-    axios.get.mockResolvedValue({
+    axiosGetMock.mockResolvedValue({
       data: [
         {
           id: 1,
