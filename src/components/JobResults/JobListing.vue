@@ -40,12 +40,15 @@
   </li>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script lang="ts" setup>
+import { computed, type PropType } from 'vue'
+
+import type { Job } from '@/api/types'
 
 const props = defineProps({
   job: {
-    type: Object,
+    // as PropType<Job> is a type assertion that tells Vue to expect an object of type Job
+    type: Object as PropType<Job>,
     required: true
   }
 })

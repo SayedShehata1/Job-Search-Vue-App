@@ -1,4 +1,4 @@
-import { expect, it, describe, vi } from 'vitest'
+import { type Mock, expect, it, describe, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import JobListings from '@/components/JobResults/JobListings.vue'
 import { createTestingPinia } from '@pinia/testing'
@@ -6,6 +6,8 @@ import { useJobsStore } from '@/stores/jobs'
 
 import { useRoute } from 'vue-router'
 vi.mock('vue-router')
+
+const useRouteMock = useRoute as Mock
 
 // Describe block for the JobListing component tests
 describe('JobListing', () => {
@@ -15,6 +17,7 @@ describe('JobListing', () => {
     const pinia = createTestingPinia()
 
     const jobsStore = useJobsStore()
+    // @ts-expect-error
     jobsStore.FILTERED_JOBS = Array(15).fill({})
 
     render(JobListings, {
@@ -28,7 +31,7 @@ describe('JobListing', () => {
 
   // Test to verify that jobs are fetched when the component is rendered
   it('fetches jobs', () => {
-    useRoute.mockReturnValue({ query: {} })
+    useRouteMock.mockReturnValue({ query: {} })
 
     // Render the component with the mock route
     const { jobsStore } = renderJobListings()
@@ -37,10 +40,11 @@ describe('JobListing', () => {
   })
 
   it('displays maximum of 10 jobs', async () => {
-    useRoute.mockReturnValue({ query: { page: '1' } })
+    useRouteMock.mockReturnValue({ query: { page: '1' } })
 
     const { jobsStore } = renderJobListings()
     // Mock the jobs store with 15 jobs
+    // @ts-expect-error
     jobsStore.FILTERED_JOBS = Array(15).fill({})
 
     // Find all job list items and verify that only 10 are displayed
@@ -51,7 +55,7 @@ describe('JobListing', () => {
   describe('when params exclude page number', () => {
     // Test to check that the default page number 1 is displayed
     it('displays page number 1', () => {
-      useRoute.mockReturnValue({ query: {} })
+      useRouteMock.mockReturnValue({ query: {} })
 
       renderJobListings()
       // Verify that "Page 1" is displayed
@@ -63,7 +67,7 @@ describe('JobListing', () => {
     // Test to check that the provided page number is displayed
     it('displays page number', () => {
       // Page number is set to 3
-      useRoute.mockReturnValue({ query: { page: '3' } })
+      useRouteMock.mockReturnValue({ query: { page: '3' } })
 
       renderJobListings()
       // Verify that "Page 3" is displayed
@@ -74,7 +78,7 @@ describe('JobListing', () => {
   describe('when user is on first page', () => {
     // Test to check that the previous page link is not displayed
     it('does not show link to previous page', async () => {
-      useRoute.mockReturnValue({ query: { page: '1' } })
+      useRouteMock.mockReturnValue({ query: { page: '1' } })
 
       renderJobListings()
       const jobsStore = useJobsStore()
@@ -88,9 +92,10 @@ describe('JobListing', () => {
     })
 
     it('shows link to next page', async () => {
-      useRoute.mockReturnValue({ query: { page: '1' } })
+      useRouteMock.mockReturnValue({ query: { page: '1' } })
 
       const { jobsStore } = renderJobListings()
+      // @ts-expect-error
       jobsStore.FILTERED_JOBS = Array(15).fill({})
       await screen.findAllByRole('listitem')
       // Verify that the next page link is displayed
@@ -103,10 +108,11 @@ describe('JobListing', () => {
     // Test to check that the next page link is not displayed
     it('does not show link to next page', async () => {
       // Page number is set to 2 (last page)
-      useRoute.mockReturnValue({ query: { page: '2' } })
+      useRouteMock.mockReturnValue({ query: { page: '2' } })
 
       const { jobsStore } = renderJobListings()
       // Mock the jobs store with 15 jobs
+      // @ts-expect-error
       jobsStore.FILTERED_JOBS = Array(15).fill({})
 
       await screen.findAllByRole('listitem')
@@ -117,9 +123,10 @@ describe('JobListing', () => {
 
     it('shows link to previous page', async () => {
       // Page number is set to 2 (last page)
-      useRoute.mockReturnValue({ query: { page: '2' } })
+      useRouteMock.mockReturnValue({ query: { page: '2' } })
 
       const { jobsStore } = renderJobListings()
+      // @ts-expect-error
       jobsStore.FILTERED_JOBS = Array(15).fill({})
       // Find all job list items
       await screen.findAllByRole('listitem')

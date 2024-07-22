@@ -1,10 +1,12 @@
-import { expect, it, describe, vi } from 'vitest'
+import { type Mock, expect, it, describe, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 
 //  mock the useRouter function that work with composition API
 import { useRouter } from 'vue-router'
 vi.mock('vue-router')
+
+const useRouterMock = useRouter as Mock
 
 import JobSearchForm from '@/components/JobSearch/JobSearchForm.vue'
 
@@ -14,7 +16,7 @@ describe('JobSearchForm', () => {
       //   make the push function a spy
       const push = vi.fn()
       //  create a mock router object with a push method that calls the spy
-      useRouter.mockReturnValue({ push })
+      useRouterMock.mockReturnValue({ push })
       render(JobSearchForm, {
         //  pass the mock router object to the component
         global: {
