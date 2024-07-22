@@ -10,26 +10,37 @@
         </div>
       </div>
       <collapsible-accordion header="Degree"> </collapsible-accordion>
-      <job-filter-sidebar-job-types />
 
-      <job-filter-sidebar-organizations />
+      <job-filter-sidebar-checkbox-group
+        header="Job Types"
+        :unique-values="UNIQUE_JOB_TYPES"
+        :action="ADD_SELECTED_JOB_TYPES"
+      />
+      <job-filter-sidebar-checkbox-group
+        header="Organizations"
+        :unique-values="UNIQUE_ORGANIZATIONS"
+        :action="ADD_SELECTED_ORGANIZATIONS"
+      />
     </section>
   </div>
 </template>
 
-<script>
+<script setup>
 import ActionButton from '@/components/Shared/ActionButton.vue'
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue'
-import JobFilterSidebarOrganizations from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarOrganizations.vue'
-import JobFilterSidebarJobTypes from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarJobTypes.vue'
+import JobFilterSidebarCheckboxGroup from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarCheckboxGroup.vue'
 
-export default {
-  name: 'JobFilterSidebar',
-  components: {
-    ActionButton,
-    CollapsibleAccordion,
-    JobFilterSidebarOrganizations,
-    JobFilterSidebarJobTypes
-  }
-}
+import { useJobsStore } from '@/stores/jobs'
+import { useUserStore } from '@/stores/user'
+
+import { computed } from 'vue'
+
+const jobsStore = useJobsStore()
+const userStore = useUserStore()
+
+const UNIQUE_ORGANIZATIONS = computed(() => jobsStore.UNIQUE_ORGANIZATIONS)
+const UNIQUE_JOB_TYPES = computed(() => jobsStore.UNIQUE_JOB_TYPES)
+
+const ADD_SELECTED_JOB_TYPES = userStore.ADD_SELECTED_JOB_TYPES
+const ADD_SELECTED_ORGANIZATIONS = userStore.ADD_SELECTED_ORGANIZATIONS
 </script>
