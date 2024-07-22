@@ -76,10 +76,13 @@ describe('JobFilterSidebarCheckboxGroup', () => {
     })
     it('navigates user to job results page tp see fresh batch fo filtered jobs', async () => {
       const push = vi.fn()
+      const action = vi.fn()
+
       useRouter.mockReturnValue({ push })
       const props = createProps({
         header: 'Job Types',
-        uniqueValues: new Set(['full time'])
+        uniqueValues: new Set(['full time']),
+        action
       })
       renderJobFilterSidebarCheckboxGroup(props)
 
