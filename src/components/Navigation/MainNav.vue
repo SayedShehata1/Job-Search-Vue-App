@@ -22,48 +22,31 @@
   </header>
 </template>
 
-<script>
-import { mapState, mapActions } from 'pinia'
+<script lang="ts" setup>
 import { useUserStore } from '@/stores/user'
+import { ref, computed } from 'vue'
 
 import ActionButton from '@/components/Shared/ActionButton.vue'
 import ProfileImage from '@/components/Navigation/ProfileImage.vue'
 import TheSubnav from '@/components/Navigation/TheSubnav.vue'
 
-export default {
-  name: 'MainNav',
-  components: {
-    ActionButton,
-    ProfileImage,
-    TheSubnav
-  },
-  data() {
-    return {
-      menuItems: [
-        { text: 'Teams', url: '/teams' },
-        { text: 'Location', url: '/' },
-        { text: 'Life at Google', url: '/' },
-        { text: 'How we hire', url: '/' },
-        { text: 'Students', url: '/' },
-        { text: 'Jobs', url: '/jobs/results' }
-      ]
-    }
-  },
-  computed: {
-    // mapStores is a helper function that takes a store and returns an object that can be used to map the store to the component instance
-    // mapState is a helper function that takes a store and an array of state properties and returns an object that can be used to map the state properties to the component instance
-    ...mapState(useUserStore, ['isLoggedIn']),
+const menuItems = ref([
+  { text: 'Teams', url: '/teams' },
+  { text: 'Location', url: '/' },
+  { text: 'Life at Google', url: '/' },
+  { text: 'How we hire', url: '/' },
+  { text: 'Students', url: '/' },
+  { text: 'Jobs', url: '/jobs/results' }
+])
 
-    headerHightClass() {
-      return {
-        'h-16': !this.isLoggedIn,
-        'h-32': this.isLoggedIn
-      }
-    }
-  },
-  methods: {
-    // mapActions is a helper function that takes a store and an array of action properties and returns an object that can be used to map the action properties to the component instance
-    ...mapActions(useUserStore, ['loginUser'])
+const userStore = useUserStore()
+const loginUser = userStore.loginUser
+const isLoggedIn = computed(() => userStore.isLoggedIn)
+
+const headerHightClass = computed(() => {
+  return {
+    'h-16': !isLoggedIn.value,
+    'h-32': isLoggedIn.value
   }
-}
+})
 </script>

@@ -56,7 +56,7 @@ describe('MainNav', () => {
       // .screen.getAllByRole("img")
 
       // to get an element and if not exist move to the second check (not through an error)
-      let profileImage = screen.queryByRole('img', {
+      const profileImage = screen.queryByRole('img', {
         //  name is the img alt   - regular expression / /i for case sensitive
         name: /user profile image/i
       })

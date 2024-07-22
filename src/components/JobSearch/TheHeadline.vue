@@ -10,41 +10,38 @@
   </section>
 </template>
 
-<script>
+<script lang="ts" setup>
 import nextElementInList from '@/utils/nextElementInList'
 
-export default {
-  name: 'TheHeadline',
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-  data() {
-    return {
-      action: 'Build',
-      interval: null
-    }
-  },
-  computed: {
-    actionClass() {
-      return {
-        // dynamic key to bind the class
-        [this.action.toLowerCase()]: true
-      }
-    }
-  },
-  created() {
-    this.changeTitle()
-  },
-  beforeUnmount() {
-    clearInterval(this.interval)
-  },
-  methods: {
-    changeTitle() {
-      this.interval = setInterval(() => {
-        const actions = ['Build', 'Create', 'Design', 'Code']
-        this.action = nextElementInList(actions, this.action)
-      }, 3000)
-    }
+const action = ref('Build')
+// here use generic type to define the type of the interval variable
+const interval = ref<ReturnType<typeof setInterval>>()
+
+const actionClass = computed(() => {
+  return {
+    // dynamic key to bind the class
+    [action.value.toLowerCase()]: true
   }
+})
+
+const changeTitle = () => {
+  interval.value = setInterval(() => {
+    const actions = ['Build', 'Create', 'Design', 'Code']
+    action.value = nextElementInList(actions, action.value)
+  }, 3000)
 }
+
+// lifecycle hook to run the changeTitle function when the component is mounted
+onMounted(() => {
+  changeTitle()
+})
+
+// lifecycle hook to clear the interval when the component is unmounted
+onBeforeUnmount(() => {
+  clearInterval(interval.value)
+})
 </script>
 
 <style scoped>
