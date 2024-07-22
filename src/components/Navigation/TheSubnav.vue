@@ -11,17 +11,16 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'pinia'
-import { useJobsStore, FILTERED_JOBS } from '@/stores/jobs'
+<script setup>
+import { useJobsStore } from '@/stores/jobs'
+// composition API functions
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-export default {
-  name: 'TheSubnav',
-  computed: {
-    ...mapState(useJobsStore, [FILTERED_JOBS]),
-    onJobResultPage() {
-      return this.$route.name === 'JobResults'
-    }
-  }
-}
+const route = useRoute()
+const onJobResultPage = computed(() => route.name === 'JobResults')
+
+// how we access the store and its state in the composition API
+const jobsStore = useJobsStore()
+const FILTERED_JOBS = computed(() => jobsStore.FILTERED_JOBS)
 </script>

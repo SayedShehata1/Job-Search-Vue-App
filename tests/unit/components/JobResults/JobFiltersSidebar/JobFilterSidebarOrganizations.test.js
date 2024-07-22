@@ -8,26 +8,26 @@ import { useJobsStore } from '@/stores/jobs'
 
 import { useUserStore } from '@/stores/user'
 
+import { useRouter } from 'vue-router'
+
+vi.mock('vue-router')
+
 describe('JobFilterSidebarOrganizations', () => {
   // a helper function to render the JobFilterSidebarOrganizations component
   const renderJobFilterSidebarOrganizations = () => {
     const pinia = createTestingPinia()
     const jobsStore = useJobsStore()
     const userStore = useUserStore()
-    const $router = { push: vi.fn() }
 
     render(JobFilterSidebarOrganizations, {
       global: {
-        mocks: {
-          $router
-        },
         plugins: [pinia],
         stubs: {
           FontAwesomeIcon: true
         }
       }
     })
-    return { jobsStore, userStore, $router }
+    return { jobsStore, userStore }
   }
 
   it('render unique organizations from jobs', async () => {
@@ -49,6 +49,8 @@ describe('JobFilterSidebarOrganizations', () => {
 
   describe('when the user click checkbox', () => {
     it('communicate that user has a selected checkbox for an organization', async () => {
+      useRouter.mockReturnValue({ push: vi.fn() })
+
       const { userStore, jobsStore } = renderJobFilterSidebarOrganizations()
       // set the UNIQUE_ORGANIZATIONS getter to return a set of unique organizations
       jobsStore.UNIQUE_ORGANIZATIONS = new Set(['Google', 'Amazon'])
@@ -67,7 +69,9 @@ describe('JobFilterSidebarOrganizations', () => {
       expect(userStore.ADD_SELECTED_ORGANIZATIONS).toHaveBeenCalledWith(['Google'])
     })
     it('navigate user to job results page to see fresh batch of filtered jobs', async () => {
-      const { $router, jobsStore } = renderJobFilterSidebarOrganizations()
+      const push = vi.fn()
+      useRouter.mockReturnValue({ push })
+      const { jobsStore } = renderJobFilterSidebarOrganizations()
       // set the UNIQUE_ORGANIZATIONS getter to return a set of unique organizations
       jobsStore.UNIQUE_ORGANIZATIONS = new Set(['Google'])
 
@@ -81,7 +85,7 @@ describe('JobFilterSidebarOrganizations', () => {
         name: /google/i
       })
       await userEvent.click(googleCheckbox)
-      expect($router.push).toHaveBeenCalledWith({ name: 'JobResults' })
+      expect(push).toHaveBeenCalledWith({ name: 'JobResults' })
     })
   })
 })

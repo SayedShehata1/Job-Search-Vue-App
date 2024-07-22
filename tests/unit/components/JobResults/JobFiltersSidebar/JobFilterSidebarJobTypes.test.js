@@ -8,25 +8,25 @@ import { useJobsStore } from '@/stores/jobs'
 
 import { useUserStore } from '@/stores/user'
 
+import { useRouter } from 'vue-router'
+
+vi.mock('vue-router')
+
 describe('JobFilterSidebarJobTypes', () => {
   // a helper function to render the JobFilterSidebarJobTypes component
   const renderJobFilterSidebarJobTypes = () => {
     const pinia = createTestingPinia()
     const jobsStore = useJobsStore()
     const userStore = useUserStore()
-    const $router = { push: vi.fn() }
     render(JobFilterSidebarJobTypes, {
       global: {
-        mocks: {
-          $router
-        },
         plugins: [pinia],
         stubs: {
           FontAwesomeIcon: true
         }
       }
     })
-    return { jobsStore, userStore, $router }
+    return { jobsStore, userStore }
   }
 
   it('render unique job types from jobs', async () => {
@@ -48,6 +48,7 @@ describe('JobFilterSidebarJobTypes', () => {
 
   describe('when user selects a jobtypes', () => {
     it('communicate that user has a selected checkbox for an jobTypes', async () => {
+      useRouter.mockReturnValue({ push: vi.fn() })
       const { userStore, jobsStore } = renderJobFilterSidebarJobTypes()
       // set the UNIQUE_JOB_TYPES getter to return a set of unique jobtypess
       jobsStore.UNIQUE_JOB_TYPES = new Set(['full time', 'part time'])
@@ -66,7 +67,9 @@ describe('JobFilterSidebarJobTypes', () => {
       expect(userStore.ADD_SELECTED_JOB_TYPES).toHaveBeenCalledWith(['full time'])
     })
     it('navigates user to job results page tp see fresh batch fo filtered jobs', async () => {
-      const { jobsStore, $router } = renderJobFilterSidebarJobTypes()
+      const push = vi.fn()
+      useRouter.mockReturnValue({ push })
+      const { jobsStore } = renderJobFilterSidebarJobTypes()
       // set the UNIQUE_JOB_TYPES getter to return a set of unique jobtypess
       jobsStore.UNIQUE_JOB_TYPES = new Set(['full time'])
 
@@ -80,7 +83,7 @@ describe('JobFilterSidebarJobTypes', () => {
         name: /full time/i
       })
       await userEvent.click(fullTimeCheckbox)
-      expect($router.push).toHaveBeenCalledWith({ name: 'JobResults' })
+      expect(push).toHaveBeenCalledWith({ name: 'JobResults' })
     })
   })
 })

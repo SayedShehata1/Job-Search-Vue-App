@@ -20,37 +20,30 @@
   </collapsible-accordion>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia'
-import { useJobsStore, UNIQUE_JOB_TYPES } from '@/stores/jobs'
-import { useUserStore, ADD_SELECTED_JOB_TYPES } from '@/stores/user'
+<script setup>
+import { useJobsStore } from '@/stores/jobs'
+import { useUserStore } from '@/stores/user'
 
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue'
-export default {
-  name: 'JobFilterSidebarJobTypes',
-  components: {
-    CollapsibleAccordion
-  },
-  data() {
-    return {
-      selectedJobTypes: []
-    }
-  },
-  computed: {
-    //  with the mapState helper we can map the store state to the component's computed properties
-    // first argument is the store we want to map to, and the second argument is an array of the store's (state or getter )we want to map
-    ...mapState(useJobsStore, [UNIQUE_JOB_TYPES])
-  },
-  methods: {
-    // with the mapActions helper we can map the store actions to the component's methods
-    ...mapActions(useUserStore, [ADD_SELECTED_JOB_TYPES]),
 
-    // this method is called when the user selects an organization to filter by and it adds the selected organization to the user store
-    selectJobType() {
-      this.ADD_SELECTED_JOB_TYPES(this.selectedJobTypes)
-      // this will update the URL query params with the selected job types
-      this.$router.push({ name: 'JobResults' })
-    }
-  }
+// composition API functions
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+// initialize selectedJobTypes as a ref with an empty array
+const selectedJobTypes = ref([])
+
+// how we access the store and its state in the composition API
+const jobsStore = useJobsStore()
+const UNIQUE_JOB_TYPES = computed(() => jobsStore.UNIQUE_JOB_TYPES)
+
+const userStore = useUserStore()
+// how we access the store and its **actions** in the composition API
+const ADD_SELECTED_JOB_TYPES = userStore.ADD_SELECTED_JOB_TYPES
+const router = useRouter()
+
+const selectJobType = () => {
+  ADD_SELECTED_JOB_TYPES(selectedJobTypes.value)
+  router.push({ name: 'JobResults' })
 }
 </script>

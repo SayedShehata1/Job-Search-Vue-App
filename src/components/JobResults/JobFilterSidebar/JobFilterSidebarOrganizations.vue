@@ -20,36 +20,26 @@
   </collapsible-accordion>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia'
-import { useJobsStore, UNIQUE_ORGANIZATIONS } from '@/stores/jobs'
-import { useUserStore, ADD_SELECTED_ORGANIZATIONS } from '@/stores/user'
+<script setup>
+import { useJobsStore } from '@/stores/jobs'
+import { useUserStore } from '@/stores/user'
 
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue'
-export default {
-  name: 'JobFilterSidebarOrganizations',
-  components: {
-    CollapsibleAccordion
-  },
-  data() {
-    return {
-      selectedOrganizations: []
-    }
-  },
-  computed: {
-    //  with the mapState helper we can map the store state to the component's computed properties
-    // first argument is the store we want to map to, and the second argument is an array of the store's (state or getter )we want to map
-    ...mapState(useJobsStore, [UNIQUE_ORGANIZATIONS])
-  },
-  methods: {
-    // with the mapActions helper we can map the store actions to the component's methods
-    ...mapActions(useUserStore, [ADD_SELECTED_ORGANIZATIONS]),
 
-    // this method is called when the user selects an organization to filter by and it adds the selected organization to the user store
-    selectOrganization() {
-      this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations)
-      this.$router.push({ name: 'JobResults' })
-    }
-  }
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const selectedOrganizations = ref([])
+
+const jobsStore = useJobsStore()
+const UNIQUE_ORGANIZATIONS = computed(() => jobsStore.UNIQUE_ORGANIZATIONS)
+
+const userStore = useUserStore()
+const ADD_SELECTED_ORGANIZATIONS = userStore.ADD_SELECTED_ORGANIZATIONS
+const router = useRouter()
+
+const selectOrganization = () => {
+  ADD_SELECTED_ORGANIZATIONS(selectedOrganizations.value)
+  router.push({ name: 'JobResults' })
 }
 </script>
