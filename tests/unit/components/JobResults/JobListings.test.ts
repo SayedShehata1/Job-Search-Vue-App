@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/vue'
 import JobListings from '@/components/JobResults/JobListings.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { useJobsStore } from '@/stores/jobs'
-
+import { useDegreesStore } from '@/stores/degrees'
 import { useRoute } from 'vue-router'
 vi.mock('vue-router')
 
@@ -17,6 +17,7 @@ describe('JobListing', () => {
     const pinia = createTestingPinia()
 
     const jobsStore = useJobsStore()
+    const degreesStore = useDegreesStore()
     // @ts-expect-error
     jobsStore.FILTERED_JOBS = Array(15).fill({})
 
@@ -26,7 +27,7 @@ describe('JobListing', () => {
         plugins: [pinia]
       }
     })
-    return { jobsStore }
+    return { jobsStore, degreesStore }
   }
 
   // Test to verify that jobs are fetched when the component is rendered
@@ -37,6 +38,15 @@ describe('JobListing', () => {
     const { jobsStore } = renderJobListings()
     // Check if FETCH_JOBS action was called
     expect(jobsStore.FETCH_JOBS).toHaveBeenCalled()
+  })
+
+  it('fetches degrees', () => {
+    useRouteMock.mockReturnValue({ query: {} })
+
+    // Render the component with the mock route
+    const { degreesStore } = renderJobListings()
+    // Check if FETCH_DEGREES action was called
+    expect(degreesStore.FETCH_DEGREES).toHaveBeenCalled()
   })
 
   it('displays maximum of 10 jobs', async () => {

@@ -5,6 +5,7 @@ import type { Degree } from '@/api/types'
 import getDegrees from '@/api/getDegrees'
 
 export const UNIQUE_DEGREES = 'UNIQUE_DEGREES'
+
 export const useDegreesStore = defineStore('degrees', () => {
   // Define the degrees state as an empty array
   const degrees = ref<Degree[]>([])
