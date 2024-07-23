@@ -34,7 +34,7 @@ describe('actions', () => {
   it('logs in the user', () => {
     const store = useUserStore()
     // Call the action to log in the user
-    store.loginUser()
+    store.LOGIN_USER()
     // Check that the user is now logged in
     expect(store.isLoggedIn).toBe(true)
   })
@@ -61,6 +61,18 @@ describe('actions', () => {
       const store = useUserStore()
       store.ADD_SELECTED_DEGREES(['Bachelors', 'Masters'])
       expect(store.selectedDegrees).toEqual(['Bachelors', 'Masters'])
+    })
+  })
+  describe('CLEAR_USER_JOB_FILTER_SELECTIONS', () => {
+    it('remove all job filter that user has chosen', () => {
+      const store = useUserStore()
+      store.selectedDegrees = ['Bachelors', 'Masters']
+      store.selectedJobTypes = ['Full Time', 'Part Time']
+      store.selectedOrganizations = ['Org1', 'Org2']
+      store.CLEAR_USER_JOB_FILTER_SELECTIONS()
+      expect(store.selectedDegrees).toEqual([])
+      expect(store.selectedJobTypes).toEqual([])
+      expect(store.selectedOrganizations).toEqual([])
     })
   })
 })

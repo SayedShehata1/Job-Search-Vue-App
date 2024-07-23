@@ -14,7 +14,7 @@
         </nav>
         <div class="flex items-center h-full ml-auto">
           <profile-image v-if="isLoggedIn" />
-          <action-button v-else text="Sign in" type="primary" @click="loginUser" />
+          <action-button v-else text="Sign in" type="primary" @click="LOGIN_USER" />
         </div>
       </div>
       <the-subnav v-if="isLoggedIn" />
@@ -40,7 +40,7 @@ const menuItems = ref([
 ])
 
 const userStore = useUserStore()
-const loginUser = userStore.loginUser
+const LOGIN_USER = userStore.LOGIN_USER
 const isLoggedIn = computed(() => userStore.isLoggedIn)
 
 const headerHightClass = computed(() => {
