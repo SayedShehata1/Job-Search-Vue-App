@@ -14,22 +14,13 @@
         </div>
       </div>
       <collapsible-accordion header="Degrees">
-        <job-filter-sidebar-checkbox-group
-          :unique-values="UNIQUE_DEGREES"
-          :action="ADD_SELECTED_DEGREES"
-        />
+        <job-filter-sidebar-degrees />
       </collapsible-accordion>
       <collapsible-accordion header="Job Types">
-        <job-filter-sidebar-checkbox-group
-          :unique-values="UNIQUE_JOB_TYPES"
-          :action="ADD_SELECTED_JOB_TYPES"
-        />
+        <job-filter-sidebar-jobs />
       </collapsible-accordion>
       <collapsible-accordion header="Organizations">
-        <job-filter-sidebar-checkbox-group
-          :unique-values="UNIQUE_ORGANIZATIONS"
-          :action="ADD_SELECTED_ORGANIZATIONS"
-        />
+        <job-filter-sidebar-organizations />
       </collapsible-accordion>
     </section>
   </div>
@@ -38,25 +29,15 @@
 <script lang="ts" setup>
 import ActionButton from '@/components/Shared/ActionButton.vue'
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue'
-import JobFilterSidebarCheckboxGroup from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarCheckboxGroup.vue'
 
-import { useJobsStore } from '@/stores/jobs'
+import JobFilterSidebarDegrees from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarDegrees.vue'
+import JobFilterSidebarJobs from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarJobs.vue'
+import JobFilterSidebarOrganizations from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarOrganizations.vue'
+
 import { useUserStore } from '@/stores/user'
-import { useDegreesStore } from '@/stores/degrees'
 
-import { computed } from 'vue'
-
-const jobsStore = useJobsStore()
 const userStore = useUserStore()
-const degreeStore = useDegreesStore()
 
-const UNIQUE_ORGANIZATIONS = computed(() => jobsStore.UNIQUE_ORGANIZATIONS)
-const UNIQUE_JOB_TYPES = computed(() => jobsStore.UNIQUE_JOB_TYPES)
-const UNIQUE_DEGREES = computed(() => degreeStore.UNIQUE_DEGREES)
-
-const ADD_SELECTED_JOB_TYPES = userStore.ADD_SELECTED_JOB_TYPES
-const ADD_SELECTED_ORGANIZATIONS = userStore.ADD_SELECTED_ORGANIZATIONS
-const ADD_SELECTED_DEGREES = userStore.ADD_SELECTED_DEGREES
-
+// action to clear user job filter selections
 const CLEAR_USER_JOB_FILTER_SELECTIONS = userStore.CLEAR_USER_JOB_FILTER_SELECTIONS
 </script>
