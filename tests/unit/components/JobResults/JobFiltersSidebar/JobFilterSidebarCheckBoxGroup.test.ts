@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 
 import { createTestingPinia } from '@pinia/testing'
 import JobFilterSidebarCheckboxGroup from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarCheckboxGroup.vue'
+import { useUserStore } from '@/stores/user'
 
 import { useRouter } from 'vue-router'
 
@@ -26,16 +27,16 @@ describe('JobFilterSidebarCheckboxGroup', () => {
 
   // a helper function to render the JobFilterSidebarJobTypes component
   const renderJobFilterSidebarCheckboxGroup = (props: JobFilterSidebarCheckboxGroupProps) => {
-    const pinia = createTestingPinia()
+    const pinia = createTestingPinia({ stubActions: false })
+    const userStore = useUserStore()
+
     render(JobFilterSidebarCheckboxGroup, {
       props: { ...props },
       global: {
-        plugins: [pinia],
-        stubs: {
-          FontAwesomeIcon: true
-        }
+        plugins: [pinia]
       }
     })
+    return { userStore }
   }
 
   it('render unique list of values', async () => {
@@ -85,6 +86,33 @@ describe('JobFilterSidebarCheckboxGroup', () => {
       })
       await userEvent.click(fullTimeCheckbox)
       expect(push).toHaveBeenCalledWith({ name: 'JobResults' })
+    })
+  })
+  describe('when user clears job filters', () => {
+    it('unchecks any checked checkboxes', async () => {
+      // mock the router to avoid errors
+      useRouterMock.mockReturnValue({ push: vi.fn() })
+      const props = createProps({
+        uniqueValues: new Set(['full time']),
+        action: vi.fn()
+      })
+      const { userStore } = renderJobFilterSidebarCheckboxGroup(props)
+      // select the full time checkbox
+      const fullTimeCheckboxBeforeAction = screen.getByRole<HTMLInputElement>('checkbox', {
+        name: /full time/i
+      })
+      // check the checkbox is checked
+      await userEvent.click(fullTimeCheckboxBeforeAction)
+      expect(fullTimeCheckboxBeforeAction.checked).toBe(true)
+      // clear the job filters by calling the store action
+      userStore.CLEAR_USER_JOB_FILTER_SELECTIONS()
+
+      // here we used findByRole because its async and we need to wait for the dom to update
+      const fullTimeCheckboxAfterAction = await screen.findByRole<HTMLInputElement>('checkbox', {
+        name: /full time/i
+      })
+      // check the checkbox is unchecked
+      expect(fullTimeCheckboxAfterAction.checked).toBe(false)
     })
   })
 })
