@@ -5,25 +5,32 @@
         <div class="flex justify-between">
           <h3 class="my-4 text-base font-semibold">What do you want to do?</h3>
           <div class="flex items-center text-sm">
-            <action-button text="Clear Filters" type="secondary"></action-button>
+            <action-button
+              text="Clear Filters"
+              type="secondary"
+              @click="CLEAR_USER_JOB_FILTER_SELECTIONS"
+            ></action-button>
           </div>
         </div>
       </div>
-      <job-filter-sidebar-checkbox-group
-        header="Degrees"
-        :unique-values="UNIQUE_DEGREES"
-        :action="ADD_SELECTED_DEGREES"
-      />
-      <job-filter-sidebar-checkbox-group
-        header="Job Types"
-        :unique-values="UNIQUE_JOB_TYPES"
-        :action="ADD_SELECTED_JOB_TYPES"
-      />
-      <job-filter-sidebar-checkbox-group
-        header="Organizations"
-        :unique-values="UNIQUE_ORGANIZATIONS"
-        :action="ADD_SELECTED_ORGANIZATIONS"
-      />
+      <collapsible-accordion header="Degrees">
+        <job-filter-sidebar-checkbox-group
+          :unique-values="UNIQUE_DEGREES"
+          :action="ADD_SELECTED_DEGREES"
+        />
+      </collapsible-accordion>
+      <collapsible-accordion header="Job Types">
+        <job-filter-sidebar-checkbox-group
+          :unique-values="UNIQUE_JOB_TYPES"
+          :action="ADD_SELECTED_JOB_TYPES"
+        />
+      </collapsible-accordion>
+      <collapsible-accordion header="Organizations">
+        <job-filter-sidebar-checkbox-group
+          :unique-values="UNIQUE_ORGANIZATIONS"
+          :action="ADD_SELECTED_ORGANIZATIONS"
+        />
+      </collapsible-accordion>
     </section>
   </div>
 </template>
@@ -50,4 +57,6 @@ const UNIQUE_DEGREES = computed(() => degreeStore.UNIQUE_DEGREES)
 const ADD_SELECTED_JOB_TYPES = userStore.ADD_SELECTED_JOB_TYPES
 const ADD_SELECTED_ORGANIZATIONS = userStore.ADD_SELECTED_ORGANIZATIONS
 const ADD_SELECTED_DEGREES = userStore.ADD_SELECTED_DEGREES
+
+const CLEAR_USER_JOB_FILTER_SELECTIONS = userStore.CLEAR_USER_JOB_FILTER_SELECTIONS
 </script>

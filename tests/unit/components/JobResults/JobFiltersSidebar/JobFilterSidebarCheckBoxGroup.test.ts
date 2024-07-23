@@ -12,7 +12,6 @@ const useRouterMock = useRouter as Mock
 
 describe('JobFilterSidebarCheckboxGroup', () => {
   interface JobFilterSidebarCheckboxGroupProps {
-    header: string
     uniqueValues: Set<string>
     action: Mock
   }
@@ -20,7 +19,6 @@ describe('JobFilterSidebarCheckboxGroup', () => {
   const createProps = (
     props: Partial<JobFilterSidebarCheckboxGroupProps> = {}
   ): JobFilterSidebarCheckboxGroupProps => ({
-    header: 'Some header',
     uniqueValues: new Set(['Value 1', 'Value 2']),
     action: vi.fn(),
     ...props
@@ -42,16 +40,10 @@ describe('JobFilterSidebarCheckboxGroup', () => {
 
   it('render unique list of values', async () => {
     const props = createProps({
-      header: 'Job Types',
       uniqueValues: new Set(['full time', 'part time'])
     })
     renderJobFilterSidebarCheckboxGroup(props)
 
-    // first click the jobtypes button
-    const button = screen.getByRole('button', {
-      name: /job types/i
-    })
-    await userEvent.click(button)
     // check that the unique jobtypess are rendered
     const jobTypesListItems = screen.getAllByRole('listitem')
     const jobTypes = jobTypesListItems.map((node) => node.textContent)
@@ -64,17 +56,11 @@ describe('JobFilterSidebarCheckboxGroup', () => {
       useRouterMock.mockReturnValue({ push: vi.fn() })
       const action = vi.fn()
       const props = createProps({
-        header: 'Job Types',
         uniqueValues: new Set(['full time', 'part time']),
         action
       })
       renderJobFilterSidebarCheckboxGroup(props)
 
-      // first click the jobtypes button
-      const button = screen.getByRole('button', {
-        name: /job types/i
-      })
-      await userEvent.click(button)
       // second click the google checkbox
       const fullTimeCheckbox = screen.getByRole('checkbox', {
         name: /full time/i
@@ -89,17 +75,10 @@ describe('JobFilterSidebarCheckboxGroup', () => {
 
       useRouterMock.mockReturnValue({ push })
       const props = createProps({
-        header: 'Job Types',
         uniqueValues: new Set(['full time']),
         action
       })
       renderJobFilterSidebarCheckboxGroup(props)
-
-      // first click the jobtypes button
-      const button = screen.getByRole('button', {
-        name: /job types/i
-      })
-      await userEvent.click(button)
 
       const fullTimeCheckbox = screen.getByRole('checkbox', {
         name: /full time/i
