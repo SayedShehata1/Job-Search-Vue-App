@@ -81,10 +81,12 @@ describe('actions', () => {
       store.selectedDegrees = ['Bachelors', 'Masters']
       store.selectedJobTypes = ['Full Time', 'Part Time']
       store.selectedOrganizations = ['Org1', 'Org2']
+      store.skillsSearchTerm = 'Vue Developer'
       store.CLEAR_USER_JOB_FILTER_SELECTIONS()
       expect(store.selectedDegrees).toEqual([])
       expect(store.selectedJobTypes).toEqual([])
       expect(store.selectedOrganizations).toEqual([])
+      expect(store.skillsSearchTerm).toBe('')
     })
   })
 })
