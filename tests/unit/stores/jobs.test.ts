@@ -129,4 +129,32 @@ describe('state', () => {
       })
     })
   })
+  describe('INCLUDE_JOB_BY_SKILLS', () => {
+    it("identifies jobs that match the user's skills search term", () => {
+      const userStore = useUserStore()
+      userStore.skillsSearchTerm = 'JavaScript'
+      const store = useJobsStore()
+      const job = createJob({ title: 'JavaScript Developer' })
+      const result = store.INCLUDE_JOB_BY_SKILLS(job)
+      expect(result).toBe(true)
+    })
+    it('handle inconsistent character case', () => {
+      const userStore = useUserStore()
+      userStore.skillsSearchTerm = 'javascript'
+      const store = useJobsStore()
+      const job = createJob({ title: 'JavaScript Developer' })
+      const result = store.INCLUDE_JOB_BY_SKILLS(job)
+      expect(result).toBe(true)
+    })
+    describe('when the user has not entered a skills search term', () => {
+      it('includes job', () => {
+        const userStore = useUserStore()
+        userStore.skillsSearchTerm = ''
+        const store = useJobsStore()
+        const job = createJob({ title: 'JavaScript Developer' })
+        const result = store.INCLUDE_JOB_BY_SKILLS(job)
+        expect(result).toBe(true)
+      })
+    })
+  })
 })
