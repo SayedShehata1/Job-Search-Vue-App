@@ -21,6 +21,9 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
 import CollapsibleAccordion from '@/components/Shared/CollapsibleAccordion.vue'
 
 import JobFilterSidebarDegrees from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarDegrees.vue'
@@ -28,4 +31,20 @@ import JobFilterSidebarJobs from '@/components/JobResults/JobFilterSidebar/JobFi
 import JobFilterSidebarOrganizations from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarOrganizations.vue'
 import JobFilterSidebarPrompt from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarPrompt.vue'
 import JobFiltereSidebarSkills from '@/components/JobResults/JobFilterSidebar/JobFilterSidebarSkills.vue'
+
+import { useUserStore } from '@/stores/user'
+
+const route = useRoute()
+const userStore = useUserStore()
+
+// handle skills search term from query params
+const parseSkillsSearchTerm = () => {
+  const role = (route.query.role as string) || ''
+  userStore.UPDATE_SKILLS_SEARCH_TERM(role)
+}
+
+onMounted(() => {
+  // call parseSkillsSearchTerm on component mount
+  parseSkillsSearchTerm()
+})
 </script>
